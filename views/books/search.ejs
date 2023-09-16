@@ -1,0 +1,97 @@
+<div class="row my-5">
+    <div class="col">
+        <div class="text-center">도서검색</div>
+        <div class="row justify-content-end my-5">
+            <form class="col-6 col-md-4 col-lg-3" name="frm">
+                <div class="input-group">
+                    <input class="form-control" name="query" value="자바">
+                    <button class="btn btn-primary">검색</button>
+                </div>
+            </div>
+        </div>
+        <div id="div_books"></div>
+        <!--페이지 이동 버튼-->
+        <div class="text-center">
+            <button id="prev" class="btn btn-primary">이전</button>
+            <span id="span_page" class="mx-3">1/10</span>
+            <button id="next" class="btn btn-primary">다음</button>
+        </div>
+    </div>
+</div>
+
+<!--도서목록 템플릿-->
+<script type="x-handlebars-template" id="temp_books">
+    <table class="table table-striped-columns">
+        {{#each documents}}
+            <tr>
+                <td><img src="{{thumbnail}}" width="50">/<td>
+                <td>{{title}}</td>
+                <td>{{format price}}/<td>
+                <td>{{authors}}/<td>
+            </tr>
+        {{/each}}
+    </table>
+</script>
+<script>
+    Handlebars.registerHelper("check", function(thumbnail){
+        if(thumbnail){
+            return thumbnail
+        }else{
+            return "http://via.placeholder.com/120x170";
+        }
+        
+    });
+
+    Handlebars.registerHelper("format", function(price){
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ '원';
+    });
+</script>
+
+    
+<script>
+    let query = $(frm.query).val();
+    let page=1;
+    getBooks();
+
+    $(frm).on("submit", function(event){
+        event.preventDefault(); // submit 방지
+        query = $(frm.query).val();
+        getBooks();        
+    });
+
+    //다음버튼을 클릭한경우 
+    $("#next").on("click", function(){
+        page++;
+        getBooks();
+    });
+    // 이전 버튼을 클릭한 경우
+    $("#prev").on("click", function(){
+        page--;
+        getBooks();
+    });
+
+
+    //도서검색목록 가지고오기
+    function getBooks() {
+        $.ajax({
+            type:"get",
+            url:"https://dapi.kakao.com/v3/search/book?target=title",
+            headers:{"Authorization" : "KakaoAK fa93aa9f47cf57428a30bedf16474839"},
+            data:{query:query, page:1, size:5},
+            success:function(data) {
+                console.log(data);
+                let temp = Handlebars.compile($("#temp_books").html());
+                $("#div_books").html(temp(data));
+                let last = math.ceil(result.meta.pageable_count/6);
+                $("#span_page").html(page + "/" + last);
+
+
+                if(page==1) $("#prev").attr("disabled", true)
+                else $("#prev").attr("disabled", false);
+
+                if(result.meta.is_end) $("#next").attr("disabled",true)
+                else $("#next").attr("disabled",false)
+            },
+        });
+    }
+</script>
