@@ -7,11 +7,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c6eb973cf081f8cd3e9fbe351f787f2e."></script>
   </head>
   <body>
     <div class="container">
       <%-include('header.ejs')%>
-      <%-include(pageName)%>
+      <%-include(pageName)%>  <!-- books 안에 search.ejs -->
       <%-include('footer.ejs')%>
     </div>
   </body>

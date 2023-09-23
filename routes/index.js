@@ -5,5 +5,6 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.render('index', { title: '홈페이지', pageName:'home.ejs'});
 });
+// 렌더링 : ejs 파일
 
 module.exports = router;
