@@ -2,6 +2,11 @@
      #div_books img{
         cursor: pointer;
      }
+     #div_books .bi-cart-check{
+        cursor: pointer;
+        color:green;
+        font-size: 1.5rem;
+     }
 </style>
 <div class="row my-5">
     <div class="col">
@@ -25,18 +30,20 @@
     </div>    
 </div>
 <!--도서검색 탬플릿-->
+<!--{{@index}}는 몇번째를 가져올것인지-->
 <script type="x-handlebars-template" id="temp_books">
     {{#each documents}}
         <div class="col-6 col-md4 col-lg-2">
             <div class="card">
                 <div class="card-body">
-                    <img src="{{check thumbnail}} " width"90%" index="{{@index}}">
+                    <img src="{{check thumbnail}} " width"90%" index="{{@index}}"> 
                     <div class="ellipsis pt-3" style="font-size:0.8rem;">
                         {{title}}
                     </div>    
                 </div>
                 <div class="card-footer" style="font-size:0.8rem;">
                     {{format price}}
+                    <i class="bi bi-cart-check float-end" book="{{book @this}}"></i>
                 </div>
             </div> 
         </div>    
@@ -57,12 +64,28 @@
     Handlebars.registerHelper("format", function(price){
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ '원';
     });
+
+    Handlebars.registerHelper("book",function(book){
+        return JSON.stringify(book); //object => string
+    });
 </script>
 
 <script>
     let query=$(frm.query).val();
     let page=1;
     getBooks();
+
+    //장바구니를 눌렀을 경우
+    $("#div_books").on("click","bi-cart-check", function(){
+        if(!sessionStorage.getItem("email")){
+            location.href="/users/login";
+        }else{
+            //장바구니에 등록
+            const book=JSON.parse($(this).attr("book")); //string->object
+            console.log(book);
+
+        }
+    })
 
     //이미지를 클릭한 경우
     $("#div_books").on("click","img", function(){
@@ -72,7 +95,7 @@
     $(frm).on("submit", function(event){
         event.preventDefault();
         query=$(frm.query).val();
-        page=1
+        page=1;
         getBooks();
     });
 
