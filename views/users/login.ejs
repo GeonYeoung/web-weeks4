@@ -29,11 +29,14 @@
     import { getAuth, signInWithEmailAndPassword } 
     from "https://www.gstatic.com/firebasejs/10.4.0/firebase/auth.js";
     const auth=getAuth(app);
-    
+   
+    //id는 #을 붙여준다.
+    //name는 그냥
+    // 태그는 아무것도 없음
     $(frm).on("submit", function(e){
         e.preventDefault();
         //유효성체크
-        const email=$(frm.email).val();
+        const email=$(frm.email).val();  //constant
         const pass=$(frm.password).val();
         if(email == ""){
             alert('이메일을 입력하세요!');
@@ -50,7 +53,7 @@
                 sessionStorage.setItem("email",email);
                 sessionStorage.setItem("uid", succes.user.uid);
                 location.href="/";
-            }).catch(error=>{
+            }).catch(error=>{      //성공하면 than, 실패하면 catch//
                 console.log(error);
                 alert(error.message);
             });
