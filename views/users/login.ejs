@@ -49,10 +49,15 @@
             //alert(email + pass);
             signInWithEmailAndPassword(auth, email, pass).then(success=>{
                 console.log(success);
-                alert("로그인에 성공하였습니다.");
+                
                 sessionStorage.setItem("email",email);
                 sessionStorage.setItem("uid", succes.user.uid);
-                location.href="/";
+                alert("로그인에 성공하였습니다.");
+                if(sessionStorage.getItem("target")){
+                    location.href=sessionStorage.getItem("target");
+                }else{
+                    location.href="/";
+                }
             }).catch(error=>{      //성공하면 than, 실패하면 catch//
                 console.log(error);
                 alert(error.message);

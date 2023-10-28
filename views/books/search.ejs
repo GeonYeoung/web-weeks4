@@ -1,7 +1,7 @@
 <div class="row my-5">
     <div class="col">
-        <div class="text-center">도서검색</div>
-        <div class="row justify-content-end my-5">
+        <div class="text-center mb-3">도서검색</div>
+        <div class="row justify-content-end mb-3">
             <form class="col-6 col-md-4 col-lg-3" name="frm">
                 <div class="input-group">
                     <input class="form-control" name="query" value="자바">
@@ -28,12 +28,21 @@
                 <td>{{title}}</td>
                 <td>{{format price}}/<td>
                 <td>{{authors}}/<td>
-                <td><button class="btn btn-primary" index="{{@index}}">도서정보</button></td>    
+                <td><button class="btn btn-primary" index="{{@index}}">도서정보</button></td> 
+                <td><button class="btn btn-primary btn-sm favorite" local = "{{toString @this}}">즐겨찾기</button></td>   
             </tr>
             <%-include('modal.ejs')%>
         {{/each}}
     </table>
 </script>
+
+<script>
+    Handlebars.registerHelper("toStrings", function(local){
+        return JSON.stringify(local);
+    });
+
+</script>
+
 <script>
     Handlebars.registerHelper("check", function(thumbnail){
         if(thumbnail){
@@ -49,11 +58,36 @@
     });
 </script>
 
-    
-<script>
+<script type="module">
+    import {app} from "/javascripts/firebase.js";
+    import { getDatabase, ref, set, get} from "https://www.gstatic.com/firebasejs/10.4.0/database/auth.js";
+    const db=getDatabase(app);
+
     let query = $(frm.query).val();
     let page=1;
     getBooks();
+
+    //즐겨찾기 버튼을 누른경우
+    $("#div_books").on("click",".favorite", async function(){ //async랑 await은 짝궁이다
+        if(sessionStorage.getItem("email")){
+            const local =JSON.parse($(this).attr("local"));
+            comsole.log(local);
+            const ref_favorite=ref(db, `favorite/${sessionStorage.getItem("uid")}/${local.id}`);
+            const snapshout =await get(ref_favorite);
+            //console.log(snapshout.val());
+            if(snapshout.val()){
+                alert("즐겨찾기에 이미 등록되었습니다.");
+            }else{
+                await set(ref_favorite,local)
+                alert("즐겨찾기에 등록되었습니다.");
+            }
+        }else{
+            sessionStorage.setItem("target","/locals");            //로그인 후 돌아올곳 지정
+            location.href="/users/login";
+            
+        
+        }
+        });
 
     //도서정보 버튼을 눌렀을떄
     $("#div_books").on("click","button", funtion(){

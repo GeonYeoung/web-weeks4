@@ -15,6 +15,9 @@
           <li class="nav-item" id="cart" style="display:  none;">
             <a class="nav-link active" aria-current="page" href="/book/cart">장바구니</a>
           </li>
+          <li class="nav-item" id="cart" style="display:  none;">
+            <a class="nav-link active" aria-current="page" href="/locals/favorite">즐겨찾기기</a>
+          </li>
         </ul>
 
         <ul class="navbar-nav d-flex">
@@ -34,7 +37,7 @@
   </nav>
   <script>
     if(sessionStorage.getItem("email")){
-      $("#login, #email, #logout, #cart").toggle(); //toggle상태룰 바꾸는것
+      $("#login, #email, #logout, #cart, #favorite").toggle(); //toggle상태룰 바꾸는것
       $("#email a").html(sessionStorage.getItem("email"));
     }
     
