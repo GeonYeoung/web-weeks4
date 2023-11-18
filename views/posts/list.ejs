@@ -1,0 +1,87 @@
+<div class="my-5">
+    <h1 class="text-end md-5">게시판</h1>
+    <div class="row">
+        <div class="col pt-3">
+            게시글수 :<span id="total">0</span>
+        </div>
+        <div class="col text-end">
+        <button id="btn-inseret" class="btn btn-primary">글쓰기</button>
+        </div>    
+    </div>
+    <hr>
+    <div id="div_posts"></div>
+    <div>
+        <button id="prev" class="btn btn-primary btn-sm">이전</button>
+        <span id="page" class="mx-3">1/2</span>
+        <button id="next" class="btn btn-primary btn-sm">다음</button>
+
+    </div>
+</div>
+<script id="temp_posts" type="x-handlebars-template">
+    <table class="table">
+        {{#each .}}
+            <tr>
+                <td>{{title}}</td>
+                <td>{{date}}</td>
+                <td>{{email}}</td>
+            </tr>    
+        {{/each}}
+    </table>
+</script>
+
+<script type="module">
+    import { app } from "/javascripts/firebase.js";
+    import { getFirestore,collection } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+    import { query,orderBy,getDocs,where,doc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+    const db = getFirestore(app);
+    let page=1;
+    let last=1;
+    let size=5;
+    $("#next").on("click", function(){
+        page++;
+        getPosts();
+    });
+
+    $("#prev").on("click", function(){
+        page--;
+        getPosts();
+    });    
+
+    getPosts();
+    async function getPosts(){
+        const q=query(collection(db,'posts'), orderBy("date","desc"));
+        const snapshot = await grtDocs(q);
+        let rows=[];
+        const total=snapshot.docs.lenght;
+        last = math.ceil(total/size);
+        $("#page").html(`${page}/${last}`);
+        $("#total").html(total)
+
+        snapshot.docs.forEach((doc, index)=>{
+            const start =(page-1)*size;
+            const end=(page*size)-1;
+            if(index>=start && index<=end){
+          const row={id:doc.id, ...doc.data()};
+          rows.push(row);  }
+            
+        });
+        const temp=Handlebars.compile($("temp_posts").html());
+        $("#div_posts").html(temp(rows));
+
+        if(page==1) $("#prev")/attr("disable",true);
+        else $("#prev").attr("disable",false);
+        if(page==last) $("#next")/attr("disable",true);
+        else $("#next").attr("disable",false);
+
+    }
+
+    $("#btn-insert").on("click",function(){
+        if(sessionStorage.getItem("uid")){
+            location.href="/post/insert";
+        }else{
+            sessionStorage.setItem("target", "/posts/insert");
+            location.href="users/login";
+        }
+    })
+
+</script>

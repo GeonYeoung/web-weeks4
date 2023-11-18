@@ -62,6 +62,7 @@
         $(frm.name).val(user.name);
         $(frm.phone).val(user.phone);
         $(frm.address).val(user.address);
+        $("#photo").attr("src",user.photo ? user.photo: "http://via.placeholder.com/200x200");
     });
 
     $("#btn-photo").on("click", async function(){
