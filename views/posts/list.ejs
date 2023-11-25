@@ -31,13 +31,13 @@
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
     import { query, orderby , getDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
     const db = getFirestore(app);
+
     let page=1;
     const size=3;
     let total=0;
 
-
-
     getPosts();
+
     async function getPosts() {
         const q = query(collection(db, 'posts'), orderBy("date", "desc"));
         const snapshot = await getDocs(q);

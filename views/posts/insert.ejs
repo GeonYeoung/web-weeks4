@@ -16,7 +16,7 @@
 
 
     
-    $(frm).on("submit",function(e){
+    $(frm).on("submit", async function(e){
         e.preventDefault();
         const title=$(frm.title).val();
         const body=$(frm.body).val();
@@ -27,9 +27,8 @@
             if(confirm("저장하실래요?")){
                 const email=sessionStorage.getitem("email");
                 const date=moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-                await addDoc(collection(db, "posts"){date,email, title,body}
-
-                alert("등록완료"");
+                await addDoc(collection(db, "posts"),{date,email, title,body});
+                alert("등록완료")
                 location.href="'posts"
             }
         }

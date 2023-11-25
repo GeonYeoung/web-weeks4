@@ -11,7 +11,12 @@ router.get('/insert', function(req, res){
 
 router.get('/read', function(req, res){
     const id=req.query.id;
-    res.render('index',{title:"게시글정보", pagename:"posts/read.ejs", id});
+    res.render('index',{title:"게시글 정보", pagename:"posts/read.ejs", id:id});
 });
+router.get('/update', function(req, res){
+    const id=req.query.id;
+    res.render('index',{title:"게시글 수정", pagename:"posts/update.ejs", id:id});
+});
+
 
 module.exports = router;
